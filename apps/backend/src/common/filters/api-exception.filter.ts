@@ -4,14 +4,19 @@ import {
   type ExceptionFilter,
   HttpException,
   HttpStatus,
-  Logger,
+  Inject,
+  type LoggerService,
 } from '@nestjs/common';
 import { ErrorCode, type ApiErrorEnvelope } from '@remotehask/shared-types';
 import type { Response } from 'express';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 @Catch()
 export class ApiExceptionFilter implements ExceptionFilter {
-  private readonly logger = new Logger(ApiExceptionFilter.name);
+  constructor(
+    @Inject(WINSTON_MODULE_NEST_PROVIDER)
+    private readonly logger: LoggerService,
+  ) {}
 
   catch(exception: unknown, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
@@ -37,7 +42,8 @@ export class ApiExceptionFilter implements ExceptionFilter {
         message = exception.message;
       }
     } else {
-      this.logger.error(exception);
+      const stack = exception instanceof Error ? exception.stack : String(exception);
+      this.logger.error('Unhandled exception', stack, ApiExceptionFilter.name);
     }
 
     const envelope: ApiErrorEnvelope = {

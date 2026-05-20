@@ -1,28 +1,30 @@
-import { ValidationPipe } from '@nestjs/common';
+import { type LoggerService } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 import { AppModule } from './app.module';
+import type { AppConfiguration } from './config/configuration';
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule);
-  const config = app.get(ConfigService);
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+  });
 
-  const apiPrefix = config.get<string>('API_PREFIX', 'api/v1');
+  const logger = app.get<LoggerService>(WINSTON_MODULE_NEST_PROVIDER);
+  app.useLogger(logger);
+
+  const config = app.get(ConfigService<AppConfiguration, true>);
+  const nodeEnv = config.get('nodeEnv', { infer: true });
+  const port = config.get('port', { infer: true });
+  const apiPrefix = config.get('apiPrefix', { infer: true });
+  const corsOrigin = config.get('corsOrigin', { infer: true });
+
   app.setGlobalPrefix(apiPrefix);
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-      transformOptions: { enableImplicitConversion: true },
-    }),
-  );
-
   app.enableCors({
-    origin: config.get<string>('CORS_ORIGIN', 'http://localhost:3000'),
+    origin: corsOrigin,
     credentials: true,
   });
 
@@ -30,13 +32,32 @@ async function bootstrap(): Promise<void> {
     .setTitle('remoteHask API')
     .setDescription('Remote desktop and device management platform')
     .setVersion('1.0')
-    .addBearerAuth()
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        in: 'header',
+      },
+      'access-token',
+    )
+    .addServer(`http://localhost:${String(port)}`, 'Local')
     .build();
-  const document = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('docs', app, document);
 
-  const port = config.get<number>('PORT', 4000);
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('docs', app, document, {
+    swaggerOptions: {
+      persistAuthorization: true,
+      tagsSorter: 'alpha',
+      operationsSorter: 'alpha',
+    },
+  });
+
   await app.listen(port);
+
+  logger.log(`Application running on port ${String(port)} (${nodeEnv})`, 'Bootstrap');
+  logger.log(`Swagger docs: http://localhost:${String(port)}/docs`, 'Bootstrap');
+  logger.log(`API base: http://localhost:${String(port)}/${apiPrefix}`, 'Bootstrap');
 }
 
 void bootstrap();

@@ -1,24 +1,37 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpStatus, ServiceUnavailableException } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+
+import { HealthService } from './health.service';
 
 @ApiTags('Health')
 @Controller('health')
 export class HealthController {
+  constructor(private readonly healthService: HealthService) {}
+
   @Get()
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Liveness probe' })
   getHealth(): { status: string } {
-    return { status: 'ok' };
+    return this.healthService.getLiveness();
   }
 
   @Get('ready')
-  @ApiOperation({ summary: 'Readiness probe' })
-  getReady(): { status: string; checks: Record<string, string> } {
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Readiness probe (PostgreSQL + Redis)' })
+  async getReady(): Promise<{ status: string; checks: Record<string, string> }> {
+    const result = await this.healthService.getReadiness();
+
+    if (result.status === 'error') {
+      throw new ServiceUnavailableException({
+        code: 'SERVICE_UNAVAILABLE',
+        message: 'One or more dependencies are unavailable',
+        checks: result.checks,
+      });
+    }
+
     return {
-      status: 'ok',
-      checks: {
-        postgres: 'pending',
-        redis: 'pending',
-      },
+      status: result.status,
+      checks: result.checks,
     };
   }
 }
