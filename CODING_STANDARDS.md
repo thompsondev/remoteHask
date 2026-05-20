@@ -6,7 +6,7 @@
 |-------|-------|
 | **Document Version** | 1.0 |
 | **Status** | Engineering Baseline |
-| **Companion** | [API_SPECIFICATION.md](./API_SPECIFICATION.md), [DATABASE_SCHEMA.md](./DATABASE_SCHEMA.md), [SYSTEM_ARCHITECTURE.md](./SYSTEM_ARCHITECTURE.md), [MIGRATIONS_PLAN.md](./MIGRATIONS_PLAN.md) |
+| **Companion** | [API_SPECIFICATION.md](./API_SPECIFICATION.md), [DATABASE_SCHEMA.md](./DATABASE_SCHEMA.md), [SYSTEM_ARCHITECTURE.md](./SYSTEM_ARCHITECTURE.md), [MIGRATIONS_PLAN.md](./MIGRATIONS_PLAN.md), [README.md](./README.md) |
 | **Last Updated** | 2026-05-20 |
 
 ---
@@ -56,16 +56,14 @@ Monorepo layout (target):
 ```text
 remoteHask/
 ├── apps/
-│   ├── api/              # NestJS REST + domain logic
-│   ├── gateway/          # NestJS Socket.IO (may share code with api)
-│   └── web/              # Next.js console
+│   ├── frontend/         # Next.js console (HeroUI + shadcn/ui)
+│   ├── backend/          # NestJS REST API (+ gateway module later)
+│   └── desktop-agent/    # Rust persistent agent
 ├── packages/
-│   ├── shared-types/     # DTOs, enums, API contracts (Zod schemas)
-│   ├── shared-utils/     # Pure helpers (date, pagination, ids)
-│   ├── eslint-config/    # Shared lint rules
-│   └── tsconfig/         # Base TS configs
-├── agent/                # Rust desktop agent
-└── docs/                 # Architecture & specs (or repo root)
+│   ├── shared-types/     # DTOs, enums, API contracts
+│   ├── shared-utils/     # Pure helpers (pagination, asserts)
+│   └── shared-config/    # ESLint, Prettier, TypeScript presets
+└── *.md                  # Architecture & specs at repo root
 ```
 
 | Rule | Rationale |

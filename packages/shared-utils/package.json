@@ -1,0 +1,38 @@
+{
+  "name": "@remotehask/shared-utils",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Shared pure utilities for remoteHask",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./pagination": {
+      "types": "./dist/pagination/index.d.ts",
+      "import": "./dist/pagination/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsc -p tsconfig.build.json --watch",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint src",
+    "clean": "rm -rf dist *.tsbuildinfo"
+  },
+  "dependencies": {
+    "@remotehask/shared-types": "workspace:*"
+  },
+  "devDependencies": {
+    "@remotehask/shared-config": "workspace:*",
+    "@types/node": "^22.15.29",
+    "eslint": "^9.28.0",
+    "typescript": "^5.8.3"
+  }
+}

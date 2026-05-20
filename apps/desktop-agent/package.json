@@ -1,0 +1,13 @@
+{
+  "name": "@remotehask/desktop-agent",
+  "version": "0.0.0",
+  "private": true,
+  "description": "remoteHask Rust desktop agent",
+  "scripts": {
+    "build": "bash -c 'command -v cargo >/dev/null && cargo build --release || echo \"[desktop-agent] skipped (cargo not installed)\"'",
+    "dev": "cargo run",
+    "lint": "cargo fmt --all -- --check",
+    "typecheck": "cargo check",
+    "clean": "cargo clean"
+  }
+}
