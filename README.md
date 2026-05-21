@@ -15,6 +15,7 @@ Production-grade remote desktop and device management platform.
 
 ## Documentation
 
+- [DEVICE_PRESENCE.md](./docs/DEVICE_PRESENCE.md) — agent connectivity, scaling, security
 - [PRODUCT_REQUIREMENTS.md](./PRODUCT_REQUIREMENTS.md)
 - [SYSTEM_ARCHITECTURE.md](./SYSTEM_ARCHITECTURE.md)
 - [API_SPECIFICATION.md](./API_SPECIFICATION.md)
@@ -67,6 +68,9 @@ cp apps/frontend/.env.example apps/frontend/.env.local
 | `pnpm lint` | ESLint across workspace |
 | `pnpm typecheck` | TypeScript check |
 | `pnpm format` | Prettier write |
+| `pnpm contracts:check` | Validate shared API/WS contracts (Zod) |
+| `pnpm test:e2e` | Backend integration tests (needs Postgres + Redis + seed) |
+| `pnpm openapi:generate` | Write `apps/backend/openapi.json` |
 
 ## Git hooks
 

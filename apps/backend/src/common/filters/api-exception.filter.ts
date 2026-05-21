@@ -1,5 +1,6 @@
 import {
   type ArgumentsHost,
+  BadRequestException,
   Catch,
   type ExceptionFilter,
   HttpException,
@@ -34,10 +35,26 @@ export class ApiExceptionFilter implements ExceptionFilter {
     if (exception instanceof HttpException) {
       status = exception.getStatus();
       const body = exception.getResponse();
-      if (typeof body === 'object') {
+
+      if (exception instanceof BadRequestException && typeof body === 'object') {
+        const record = body as Record<string, unknown>;
+        code = ErrorCode.VALIDATION_FAILED;
+        message = 'Validation failed';
+        const rawMessages = record.message;
+        if (Array.isArray(rawMessages)) {
+          for (const entry of rawMessages) {
+            if (typeof entry === 'string') {
+              details.push({ field: 'body', code: 'INVALID', message: entry });
+            }
+          }
+        }
+      } else if (typeof body === 'object') {
         const record = body as Record<string, unknown>;
         code = typeof record.code === 'string' ? record.code : code;
         message = typeof record.message === 'string' ? record.message : exception.message;
+        if (Array.isArray(record.details)) {
+          details.push(...(record.details as ApiErrorEnvelope['error']['details']));
+        }
       } else {
         message = exception.message;
       }

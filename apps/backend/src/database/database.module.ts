@@ -5,6 +5,8 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 import type { AppConfiguration } from '../config/configuration';
 
+import { entities } from './entities';
+
 @Global()
 @Module({
   imports: [
@@ -16,7 +18,7 @@ import type { AppConfiguration } from '../config/configuration';
         return {
           type: 'postgres' as const,
           url: database.url,
-          autoLoadEntities: true,
+          entities: [...entities],
           synchronize: false,
           migrationsRun: false,
           namingStrategy: new SnakeNamingStrategy(),

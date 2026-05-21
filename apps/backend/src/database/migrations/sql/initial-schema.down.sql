@@ -1,0 +1,40 @@
+DROP TRIGGER IF EXISTS trg_audit_events_deny_delete ON audit_events;
+DROP TRIGGER IF EXISTS trg_audit_events_deny_update ON audit_events;
+DROP FUNCTION IF EXISTS deny_audit_mutation();
+
+DROP TABLE IF EXISTS refresh_tokens CASCADE;
+DROP TABLE IF EXISTS audit_events CASCADE;
+DROP TABLE IF EXISTS file_transfers CASCADE;
+DROP TABLE IF EXISTS remote_session_events CASCADE;
+DROP TABLE IF EXISTS remote_session_participants CASCADE;
+DROP TABLE IF EXISTS remote_sessions CASCADE;
+DROP TABLE IF EXISTS organization_policies CASCADE;
+DROP TABLE IF EXISTS device_tags CASCADE;
+DROP TABLE IF EXISTS device_credentials CASCADE;
+DROP TABLE IF EXISTS devices CASCADE;
+DROP TABLE IF EXISTS role_permissions CASCADE;
+DROP TABLE IF EXISTS permissions CASCADE;
+DROP TABLE IF EXISTS organization_members CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS organization_settings CASCADE;
+DROP TABLE IF EXISTS organizations CASCADE;
+
+DROP FUNCTION IF EXISTS set_updated_at();
+
+DROP TYPE IF EXISTS audit_severity;
+DROP TYPE IF EXISTS audit_category;
+DROP TYPE IF EXISTS audit_actor_type;
+DROP TYPE IF EXISTS file_transfer_status;
+DROP TYPE IF EXISTS file_transfer_direction;
+DROP TYPE IF EXISTS session_event_type;
+DROP TYPE IF EXISTS session_end_reason;
+DROP TYPE IF EXISTS session_type;
+DROP TYPE IF EXISTS session_status;
+DROP TYPE IF EXISTS presence_status;
+DROP TYPE IF EXISTS device_registration_status;
+DROP TYPE IF EXISTS device_platform;
+DROP TYPE IF EXISTS system_role;
+DROP TYPE IF EXISTS invitation_status;
+DROP TYPE IF EXISTS organization_member_status;
+DROP TYPE IF EXISTS subscription_tier;
+DROP TYPE IF EXISTS organization_status;

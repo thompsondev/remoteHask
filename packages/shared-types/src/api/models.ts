@@ -4,6 +4,45 @@ export interface UserSummaryDto {
   id: string;
   email: string;
   displayName: string;
+  avatarUrl?: string | null;
+  emailVerified?: boolean;
+}
+
+export interface OrganizationMembershipDto {
+  id: string;
+  name: string;
+  slug: string;
+  role: string;
+  status?: string;
+}
+
+export interface AuthLoginResponseDto {
+  accessToken: string;
+  expiresIn: number;
+  tokenType: string;
+  user: UserSummaryDto;
+  organizations: OrganizationMembershipDto[];
+  mfaRequired: boolean;
+  mfaChallengeId?: string;
+  methods?: string[];
+}
+
+export interface AuthMfaChallengeResponseDto {
+  mfaRequired: true;
+  mfaChallengeId: string;
+  methods: string[];
+}
+
+export interface AuthRefreshResponseDto {
+  accessToken: string;
+  expiresIn: number;
+  tokenType: string;
+}
+
+export interface AuthMeResponseDto {
+  user: UserSummaryDto;
+  organizations: OrganizationMembershipDto[];
+  currentOrganizationId: string | null;
 }
 
 export interface DeviceDto {

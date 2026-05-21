@@ -3,6 +3,9 @@ import nextPlugin from '@next/eslint-plugin-next';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
+  {
+    ignores: ['apps/backend/scripts/**', 'apps/backend/openapi.json'],
+  },
   ...baseConfig,
   {
     files: ['apps/backend/**/*.ts'],

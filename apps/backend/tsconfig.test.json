@@ -1,0 +1,19 @@
+{
+  "extends": "../../packages/shared-config/typescript/nestjs.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "./dist",
+    "rootDir": ".",
+    "noEmit": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "types": ["jest", "node"]
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts", "scripts/**/*.ts"],
+  "exclude": ["node_modules", "dist"],
+  "references": [
+    { "path": "../../packages/shared-types" },
+    { "path": "../../packages/shared-utils" }
+  ]
+}

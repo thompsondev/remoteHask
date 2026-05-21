@@ -11,4 +11,17 @@ export default [
       },
     },
   },
+  {
+    files: ['test/**/*.ts'],
+    languageOptions: {
+      parserOptions: {
+        project: './tsconfig.test.json',
+        projectService: false,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+  {
+    ignores: ['scripts/**'],
+  },
 ];

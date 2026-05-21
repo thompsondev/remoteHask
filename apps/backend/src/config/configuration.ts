@@ -14,6 +14,19 @@ export interface AppConfiguration {
   redis: {
     url: string;
   };
+  jwt: {
+    secret: string;
+    accessExpiresIn: number;
+    refreshExpiresIn: number;
+    refreshCookieName: string;
+  };
+  gateway: {
+    publicUrl: string;
+    instanceId: string;
+    heartbeatIntervalSeconds: number;
+    heartbeatTtlSeconds: number;
+    presenceStaleGraceSeconds: number;
+  };
 }
 
 export default function configuration(): AppConfiguration {
@@ -32,6 +45,19 @@ export default function configuration(): AppConfiguration {
     },
     redis: {
       url: env.REDIS_URL ?? '',
+    },
+    jwt: {
+      secret: env.JWT_SECRET ?? '',
+      accessExpiresIn: Number(env.JWT_ACCESS_EXPIRES_IN ?? 900),
+      refreshExpiresIn: Number(env.JWT_REFRESH_EXPIRES_IN ?? 604_800),
+      refreshCookieName: env.REFRESH_COOKIE_NAME ?? 'rh_refresh',
+    },
+    gateway: {
+      publicUrl: env.WS_PUBLIC_URL ?? `http://localhost:${String(env.PORT ?? 4000)}`,
+      instanceId: env.GATEWAY_INSTANCE_ID ?? `gw-${String(process.pid)}`,
+      heartbeatIntervalSeconds: Number(env.HEARTBEAT_INTERVAL_SECONDS ?? 15),
+      heartbeatTtlSeconds: Number(env.HEARTBEAT_TTL_SECONDS ?? 45),
+      presenceStaleGraceSeconds: Number(env.PRESENCE_STALE_GRACE_SECONDS ?? 30),
     },
   };
 }

@@ -1,0 +1,496 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/v1/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login success or MFA challenge"
+          }
+        },
+        "summary": "Authenticate with email and password",
+        "tags": ["auth"]
+      }
+    },
+    "/api/v1/auth/register": {
+      "post": {
+        "operationId": "AuthController_register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Register a new user and organization",
+        "tags": ["auth"]
+      }
+    },
+    "/api/v1/auth/mfa/verify": {
+      "post": {
+        "operationId": "AuthController_mfaVerify",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MfaVerifyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Complete MFA challenge",
+        "tags": ["auth"]
+      }
+    },
+    "/api/v1/auth/refresh": {
+      "post": {
+        "operationId": "AuthController_refresh",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Rotate refresh token and issue new access token",
+        "tags": ["auth"]
+      }
+    },
+    "/api/v1/auth/logout": {
+      "post": {
+        "operationId": "AuthController_logout",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LogoutDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Revoke refresh session",
+        "tags": ["auth"]
+      }
+    },
+    "/api/v1/auth/me": {
+      "get": {
+        "operationId": "AuthController_me",
+        "parameters": [
+          {
+            "name": "x-organization-id",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Current user profile and memberships",
+        "tags": ["auth"]
+      }
+    },
+    "/api/v1/devices/enroll": {
+      "post": {
+        "operationId": "DevicesController_enroll",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnrollDeviceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Device enrolled; returns one-time device token"
+          }
+        },
+        "summary": "Agent first-time registration",
+        "tags": ["devices"]
+      }
+    },
+    "/api/v1/devices/heartbeat": {
+      "post": {
+        "operationId": "DevicesController_heartbeat",
+        "parameters": [
+          {
+            "name": "X-Device-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceHeartbeatDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "HTTP fallback heartbeat",
+        "tags": ["devices"]
+      }
+    },
+    "/api/v1/organizations/current/devices": {
+      "get": {
+        "operationId": "DevicesController_listDevices",
+        "parameters": [
+          {
+            "name": "x-organization-id",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 50,
+              "type": "number"
+            }
+          },
+          {
+            "name": "cursor",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "presence",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["online", "offline", "stale", "unknown"]
+            }
+          },
+          {
+            "name": "platform",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["windows", "macos", "linux", "other"]
+            }
+          },
+          {
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Organization-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Device inventory merged with Redis presence"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "List devices with live presence",
+        "tags": ["devices"]
+      }
+    },
+    "/api/v1/organizations/current/enrollment-tokens": {
+      "post": {
+        "operationId": "DevicesController_createEnrollmentToken",
+        "parameters": [
+          {
+            "name": "x-organization-id",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Create one-time enrollment token",
+        "tags": ["devices"]
+      }
+    },
+    "/api/v1/health": {
+      "get": {
+        "operationId": "HealthController_getHealth",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Liveness probe",
+        "tags": ["Health"]
+      }
+    },
+    "/api/v1/health/ready": {
+      "get": {
+        "operationId": "HealthController_getReady",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Readiness probe (PostgreSQL + Redis)",
+        "tags": ["Health"]
+      }
+    }
+  },
+  "info": {
+    "title": "remoteHask API",
+    "description": "Remote desktop and device management platform.\n\nWebSocket namespaces (not in OpenAPI):\n- `/console` — operator dashboard (JWT)\n- `/agents` — desktop agent (device token)\n\nSee docs/DEVICE_PRESENCE.md for presence events and scaling notes.",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [
+    {
+      "name": "auth",
+      "description": "User authentication and sessions"
+    },
+    {
+      "name": "devices",
+      "description": "Device enrollment, heartbeat, and inventory"
+    },
+    {
+      "name": "health",
+      "description": "Liveness and readiness probes"
+    }
+  ],
+  "servers": [
+    {
+      "url": "http://localhost:4000",
+      "description": "Local"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "access-token": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http",
+        "in": "header"
+      }
+    },
+    "schemas": {
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "tech@acme.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "securePassword1"
+          }
+        },
+        "required": ["email", "password"]
+      },
+      "RegisterDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "alex@acme.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "securePassword1"
+          },
+          "displayName": {
+            "type": "string",
+            "example": "Alex Tech"
+          },
+          "organizationName": {
+            "type": "string",
+            "example": "Acme Corp"
+          },
+          "organizationSlug": {
+            "type": "string",
+            "example": "acme"
+          }
+        },
+        "required": ["email", "password", "displayName", "organizationName"]
+      },
+      "MfaVerifyDto": {
+        "type": "object",
+        "properties": {
+          "mfaChallengeId": {
+            "type": "string"
+          },
+          "method": {
+            "type": "string",
+            "enum": ["totp", "webauthn"]
+          },
+          "code": {
+            "type": "string",
+            "example": "123456"
+          }
+        },
+        "required": ["mfaChallengeId", "method", "code"]
+      },
+      "RefreshDto": {
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "description": "Required when refresh token is not sent as httpOnly cookie"
+          }
+        }
+      },
+      "LogoutDto": {
+        "type": "object",
+        "properties": {
+          "allDevices": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "EnrollDeviceDto": {
+        "type": "object",
+        "properties": {
+          "enrollmentToken": {
+            "type": "string"
+          },
+          "hostname": {
+            "type": "string"
+          },
+          "platform": {
+            "type": "string",
+            "enum": ["windows", "macos", "linux", "other"]
+          },
+          "osVersion": {
+            "type": "string"
+          },
+          "agentVersion": {
+            "type": "string"
+          },
+          "hardwareInfo": {
+            "type": "object"
+          }
+        },
+        "required": ["enrollmentToken", "hostname", "platform", "agentVersion"]
+      },
+      "DeviceHeartbeatDto": {
+        "type": "object",
+        "properties": {
+          "agentVersion": {
+            "type": "string"
+          },
+          "osUser": {
+            "type": "string"
+          },
+          "metrics": {
+            "type": "object"
+          }
+        },
+        "required": ["agentVersion", "osUser"]
+      }
+    }
+  }
+}

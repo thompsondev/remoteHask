@@ -6,11 +6,37 @@ export interface WsEventEnvelope<T> {
   payload: T;
 }
 
+export interface WsAckResponse {
+  ok: boolean;
+  room?: string;
+  message?: string;
+}
+
+export interface SocketConnectedPayload {
+  socketId: string;
+  serverTime: string;
+  rooms: string[];
+}
+
 export interface DevicePresencePayload {
   deviceId: string;
   organizationId: string;
   presence: 'online' | 'offline' | 'stale' | 'unknown';
   lastSeenAt: string;
+  agentVersion?: string | null;
+  lastConsoleUser?: string | null;
+}
+
+export interface AgentHeartbeatPayload {
+  deviceId: string;
+  agentVersion: string;
+  osUser: string;
+  metrics?: { cpuPercent?: number; memoryMb?: number };
+}
+
+export interface AgentHeartbeatAckPayload {
+  nextHeartbeatSeconds: number;
+  pendingCommands: unknown[];
 }
 
 export interface SessionInvitePayload {
@@ -29,9 +55,11 @@ export interface SignalingOfferPayload {
   sdp: { type: string; sdp: string };
 }
 
-export interface AgentHeartbeatPayload {
+export interface AgentEnrollResponseDto {
   deviceId: string;
-  agentVersion: string;
-  osUser: string;
-  metrics?: { cpuPercent?: number; memoryMb?: number };
+  organizationId: string;
+  deviceToken: string;
+  deviceTokenExpiresAt: string | null;
+  wsUrl: string;
+  apiUrl: string;
 }

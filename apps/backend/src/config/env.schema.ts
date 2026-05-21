@@ -23,6 +23,15 @@ export const envSchema = z.object({
     .string()
     .optional()
     .transform((value) => value === 'true'),
+  JWT_SECRET: z.string().min(32).default('local-dev-jwt-secret-min-32-characters!!'),
+  JWT_ACCESS_EXPIRES_IN: z.coerce.number().int().positive().default(900),
+  JWT_REFRESH_EXPIRES_IN: z.coerce.number().int().positive().default(604_800),
+  REFRESH_COOKIE_NAME: z.string().min(1).default('rh_refresh'),
+  WS_PUBLIC_URL: z.string().url().optional(),
+  GATEWAY_INSTANCE_ID: z.string().min(1).optional(),
+  HEARTBEAT_INTERVAL_SECONDS: z.coerce.number().int().positive().default(15),
+  HEARTBEAT_TTL_SECONDS: z.coerce.number().int().positive().default(45),
+  PRESENCE_STALE_GRACE_SECONDS: z.coerce.number().int().positive().default(30),
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;
