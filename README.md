@@ -6,7 +6,7 @@ Production-grade remote desktop and device management platform.
 
 | Path | Description |
 |------|-------------|
-| [apps/frontend](./apps/frontend) | Next.js operator console (HeroUI + shadcn/ui) |
+| [apps/frontend](./apps/frontend) | Next.js operator console (HeroUI + shadcn/ui); UI wireframes in [`design.pen`](./apps/frontend/design.pen) |
 | [apps/backend](./apps/backend) | NestJS REST API |
 | [apps/desktop-agent](./apps/desktop-agent) | Rust desktop agent |
 | [packages/shared-types](./packages/shared-types) | Shared TypeScript types and API contracts |
@@ -57,7 +57,15 @@ Copy environment files:
 ```bash
 cp apps/backend/.env.example apps/backend/.env
 cp apps/frontend/.env.example apps/frontend/.env.local
+# optional — enable backend e2e tests
+cp apps/backend/.env.test.example apps/backend/.env.test
 ```
+
+## UI design (Pencil)
+
+Wireframes for the operator console live in [`apps/frontend/design.pen`](./apps/frontend/design.pen). Open that file in Cursor with the [Pencil](https://pencil.dev) extension, complete activation, and ensure Pencil appears under **Settings → Tools & MCP** (Claude Code login via `claude` is required for MCP).
+
+See [apps/frontend/DESIGN.md](./apps/frontend/DESIGN.md) for screen-to-route mapping and the design → code workflow.
 
 ## Scripts
 
